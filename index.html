@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Садик на свободном</title>
+  <meta name="theme-color" content="#4b8f4f" />
+  <meta name="description" content="Автономный каталог растений и цветов — поиск, категории и фотографии без интернета." />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+
+
+
+  <style>
+    :root {
+      --bg: #f3f8f1;
+      --surface: rgba(255,255,255,0.82);
+      --surface-strong: #ffffff;
+      --text: #1f2d1f;
+      --muted: #6f7d6e;
+      --green: #4b8f4f;
+      --green-dark: #3f7d43;
+      --line: rgba(53, 83, 53, 0.12);
+      --shadow: 0 12px 30px rgba(54, 77, 54, 0.10);
+      --shadow-hover: 0 16px 36px rgba(54, 77, 54, 0.16);
+      --chip: #ffffff;
+      --chip-border: rgba(53,83,53,0.10);
+      --chip-active: #4b8f4f;
+      --chip-active-text: #fff;
+      --input-bg: rgba(255,255,255,0.95);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Roboto', Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .page {
+      width: 100%;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 24px 36px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.02fr 1.18fr;
+      gap: 42px;
+      align-items: center;
+      padding: 18px 0 38px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #4c614c;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(54px, 6vw, 86px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      font-weight: 900;
+      max-width: 520px;
+    }
+
+    .hero-subtitle {
+      margin: 24px 0 0;
+      font-size: 20px;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 520px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+      align-items: center;
+    }
+
+    .pill, .btn {
+      border: 1px solid var(--chip-border);
+      background: var(--chip);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      text-decoration: none;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease, border-color .18s ease;
+      white-space: nowrap;
+    }
+
+    .pill {
+      padding: 13px 18px;
+      font-size: 15px;
+      min-height: 44px;
+      gap: 10px;
+    }
+
+    .pill strong {
+      font-weight: 700;
+    }
+
+    .btn {
+      padding: 13px 20px;
+      min-height: 46px;
+      font-size: 15px;
+      background: var(--green);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 10px 22px rgba(75,143,79,0.22);
+      font-weight: 700;
+    }
+
+    .pill:hover, .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .btn:hover {
+      background: var(--green-dark);
+    }
+
+    .hero-image {
+      position: relative;
+      min-height: 520px;
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: 0 16px 34px rgba(45, 63, 45, 0.14);
+      background: #dfe8dc;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-caption {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(8px);
+      border-radius: 18px;
+      padding: 14px 18px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d3d2d;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+    }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding-top: 26px;
+      margin-top: 12px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .search-block label {
+      display: block;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: #324032;
+    }
+
+    .search-block input {
+      width: 100%;
+      border: 1px solid rgba(53,83,53,0.15);
+      border-radius: 18px;
+      background: var(--input-bg);
+      padding: 16px 18px;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .search-block input:focus {
+      border-color: rgba(75,143,79,0.45);
+      box-shadow: 0 0 0 4px rgba(75,143,79,0.10);
+    }
+
+    .count {
+      font-size: 16px;
+      font-weight: 700;
+      color: #5a675a;
+      padding-bottom: 10px;
+      text-align: right;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .chip {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--chip-border);
+      background: var(--chip);
+      color: #2a352a;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(53,83,53,0.08);
+      transition: transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(53,83,53,0.12);
+    }
+
+    .chip.active {
+      background: var(--chip-active);
+      color: var(--chip-active-text);
+      border-color: transparent;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(53,83,53,0.10);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: transform .18s ease, box-shadow .18s ease;
+      min-height: 340px;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+      background: #e5e8e5;
+    }
+
+    .card-body {
+      padding: 16px 16px 18px;
+    }
+
+    .card-title {
+      margin: 0 0 6px;
+      font-size: 20px;
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .card-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .card-desc {
+      margin: 0 0 12px;
+      color: #3b473b;
+      line-height: 1.45;
+      font-size: 14px;
+      min-height: 42px;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .link {
+      text-decoration: none;
+      color: var(--green-dark);
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .error {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: #fff3cd;
+      border: 1px solid #ffe69c;
+      color: #856404;
+      display: none;
+    }
+
+    .footer {
+      margin-top: 28px;
+      padding: 24px 0 8px;
+      border-top: 1px solid var(--line);
+      color: #627162;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1100px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-image {
+        min-height: 420px;
+      }
+
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .count {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .container {
+        padding: 18px 14px 24px;
+      }
+
+      .hero {
+        gap: 26px;
+        padding-top: 8px;
+      }
+
+      .hero h1 {
+        font-size: 44px;
+      }
+
+      .hero-subtitle {
+        font-size: 17px;
+      }
+
+      .hero-image {
+        min-height: 320px;
+        border-radius: 22px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .pill, .btn {
+        width: 100%;
+      }
+
+      .contacts {
+        width: 100%;
+      }
+    }
+  
+    .offline-note { display:block; margin:0 0 16px; padding:10px 14px; border-radius:12px; background:#e3f2df; color:#285c2c; font-size:13px; font-weight:700; }
+    @media (max-width:700px) {
+      .container { padding:14px 12px 28px; }
+      .hero { display:flex; flex-direction:column; gap:18px; padding:8px 0 24px; align-items:stretch; }
+      .hero h1 { font-size:clamp(38px,11vw,58px); max-width:none; }
+      .hero-subtitle { font-size:16px; margin-top:14px; }
+      .hero-image { min-height:0; height:230px; border-radius:20px; }
+      .hero-actions { gap:8px; }
+      .pill,.btn { white-space:normal; text-align:center; padding:11px 14px; min-height:44px; }
+      #search { width:100%; min-height:48px; font-size:16px; }
+      .cards { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:10px !important; }
+      .card { min-width:0; border-radius:14px !important; overflow:hidden; }
+      .card-img { width:100%; height:145px !important; object-fit:cover; }
+      .card-body { padding:10px !important; }
+      .card-title { font-size:16px !important; line-height:1.2; overflow-wrap:anywhere; }
+      .card-meta,.card-desc { font-size:12px !important; }
+      .price { font-size:15px !important; }
+      footer { font-size:12px; line-height:1.5; }
+    }
+    @media (max-width:360px) { .cards { grid-template-columns:1fr !important; } .card-img { height:210px !important; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="container">
+      <div class="offline-note">✓ Автономный каталог — работает без интернета</div>
+      <section class="hero">
+        <div class="hero-text">
+          <div class="eyebrow">Совместная закупка и продажа растений</div>
+          <h1>Садик на Свободном</h1>
+          <p class="hero-subtitle">С нами можно связаться в MAX и WhatsApp</p>
+
+          <div class="hero-actions">
+            <a class="pill" href="tel:+89608546007"><strong>89608546007</strong> Екатерина</a>
+            <a class="pill" href="tel:+89648863510"><strong>89648863510</strong> Татьяна</a>
+            <a class="btn" href="https://max.ru/join/zBUsfrz8tTYq5GkbVPEQCq9rHifbwbJgb22Gc0aA3NA" target="_blank" rel="noopener">Группа в Max</a>
+          </div>
+        </div>
+
+        <div class="hero-image">
+          <img src="./image.jpg" alt="Садик на свободном">
+          <div class="hero-caption">Садик на Свободном — растения, которые радуют глаз</div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="controls">
+          <div class="search-block">
+            <label for="search">Поиск по названию</label>
+            <input id="search" type="text" placeholder="Например: тюльпан" />
+          </div>
+          <div class="count" id="count">Показано: 0 из 0</div>
+        </div>
+
+        <div class="chips" id="chips">
+          <button class="chip active" data-filter="all">Все</button>
+        </div>
+
+        <div id="catalog" class="cards"></div>
+        <div id="error" class="error"></div>
+      </section>
+
+      <footer class="footer">
+        Контакты г.Астрахань Новороссийская 37 с 9 до 19 (уточните)<br>
+        Телефон 89608546007
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    let allProducts = [];
+    let currentCategory = 'all';
+
+    function normalize(text) {
+      return String(text || '').toLowerCase().trim();
+    }
+
+    function renderCards(products) {
+      const catalog = document.getElementById('catalog');
+      catalog.innerHTML = '';
+
+      products.forEach(product => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.dataset.category = product.category;
+        card.dataset.name = normalize(product.name);
+
+        card.innerHTML = `
+          <img class="card-img" src="${product.photoUrl}" alt="${product.name}">
+          <div class="card-body">
+            <h2 class="card-title">${product.name}</h2>
+            <div class="card-meta">${product.category}</div>
+            <p class="card-desc">${product.description}</p>
+            <div class="card-footer">
+              <div class="price">${product.price} ₽</div>
+            </div>
+          </div>
+        `;
+
+        catalog.appendChild(card);
+      });
+    }
+
+    function renderChips(products) {
+      const chips = document.getElementById('chips');
+      chips.innerHTML = '<button class="chip active" data-filter="all">Все</button>';
+
+      [...new Set(products.map(item => item.category))].forEach(category => {
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.dataset.filter = category;
+        btn.textContent = category;
+        chips.appendChild(btn);
+      });
+
+      chips.addEventListener('click', (e) => {
+        const btn = e.target.closest('.chip');
+        if (!btn) return;
+        currentCategory = btn.dataset.filter;
+        document.querySelectorAll('.chip').forEach(ch => ch.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      });
+    }
+
+    function applyFilters() {
+      const query = normalize(document.getElementById('search').value);
+      const cards = document.querySelectorAll('.card');
+      let shown = 0;
+
+      cards.forEach(card => {
+        const matchesCategory = currentCategory === 'all' || card.dataset.category === currentCategory;
+        const matchesSearch = !query || card.dataset.name.includes(query);
+        const show = matchesCategory && matchesSearch;
+        card.classList.toggle('hidden', !show);
+        if (show) shown++;
+      });
+
+      document.getElementById('count').textContent = `Показано: ${shown} из ${cards.length}`;
+    }
+
+    // Каталог встроен в HTML — интернет и fetch не нужны.
+    const OFFLINE_CATALOG = [{"id":2,"name":"Обдам","category":"Нарциссы","description":"Классический декоративный цветок.","price":100,"photoUrl":"./images/2.jpg"},{"id":4,"name":"Долли молингер","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/4.jpg"},{"id":5,"name":"Барет","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/5.jpg"},{"id":6,"name":"Replete","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/6.jpg"},{"id":7,"name":"Елоу Паррот","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/7.jpg"},{"id":8,"name":"Dick Wilden","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/8.jpg"},{"id":9,"name":"Ice king","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/9.jpg"},{"id":10,"name":"Лав колл","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/10.jpg"},{"id":11,"name":"Палмарес","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/11.jpg"},{"id":12,"name":"Обдам","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/12.jpg"},{"id":13,"name":"Тахити","category":"Нарциссы","description":"","price":100,"photoUrl":"./images/13.jpg"},{"id":14,"name":"Пинк Санрайз","category":"Мускари","description":"","price":150,"photoUrl":"./images/14.jpg"},{"id":15,"name":"Азуреум","category":"Мускари","description":"","price":30,"photoUrl":"./images/15.jpg"},{"id":16,"name":"Сибирский тигр","category":"Мускари","description":"","price":30,"photoUrl":"./images/16.jpg"},{"id":17,"name":"Фловер рекорд","category":"Крокусы","description":"","price":50,"photoUrl":"./images/17.jpg"},{"id":18,"name":"Ремембер","category":"Крокусы","description":"","price":50,"photoUrl":"./images/18.jpg"},{"id":19,"name":"Еллоу","category":"Крокусы","description":"","price":50,"photoUrl":"./images/19.jpg"},{"id":20,"name":"Пиквик","category":"Крокусы","description":"","price":50,"photoUrl":"./images/20.jpg"},{"id":21,"name":"Пинк пепл","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/21.jpg"},{"id":22,"name":"Вудсток","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/22.jpg"},{"id":23,"name":"Дельт блю","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/23.jpg"},{"id":24,"name":"Ян босс","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/24.jpg"},{"id":25,"name":"Чайна пинк","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/25.jpg"},{"id":26,"name":"Блю стар","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/26.jpg"},{"id":27,"name":"Пурпл","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/27.jpg"},{"id":28,"name":"Вайт перл","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/28.jpg"},{"id":29,"name":"Елоу квин","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/29.jpg"},{"id":30,"name":"Джипси квин","category":"Гиацинты","description":"","price":100,"photoUrl":"./images/30.jpg"},{"id":31,"name":"Гринвейв","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/31.jpg"},{"id":32,"name":"Нигрито парет","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/32.jpg"},{"id":33,"name":"Блю Перрот","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/33.jpg"},{"id":34,"name":"Либретто","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/34.jpg"},{"id":35,"name":"Ла куртин","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/35.jpg"},{"id":36,"name":"Парет кинг","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/36.jpg"},{"id":37,"name":"Веберс","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/37.jpg"},{"id":38,"name":"Игл винкс","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/38.jpg"},{"id":39,"name":"Холланд","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/39.jpg"},{"id":40,"name":"Рококо","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/40.jpg"},{"id":41,"name":"Вайт ребер","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/41.jpg"},{"id":42,"name":"Фроз найт","category":"Тюльпаны попугайные","description":"","price":120,"photoUrl":"./images/42.jpg"},{"id":43,"name":"Вайт либерстар","category":"Тюльпаны","description":"","price":90,"photoUrl":"./images/43.jpg"},{"id":44,"name":"Мари джо","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/44.jpg"},{"id":45,"name":"Марьяж","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/45.jpg"},{"id":46,"name":"Перпл кристалл","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/46.jpg"},{"id":47,"name":"Верона","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/47.jpg"},{"id":48,"name":"Мондиаль","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/48.jpg"},{"id":49,"name":"Престо","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/49.jpg"},{"id":50,"name":"Версаче","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/50.jpg"},{"id":51,"name":"Нью санта","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/51.jpg"},{"id":52,"name":"Маргарита","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/52.jpg"},{"id":53,"name":"Дример","category":"Тюльпаны","description":"","price":90,"photoUrl":"./images/53.jpg"},{"id":54,"name":"Дабл прайс","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/54.jpg"},{"id":55,"name":"Линджери","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/55.jpg"},{"id":56,"name":"Ферст прайс","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/56.jpg"},{"id":57,"name":"Коламбус","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/57.jpg"},{"id":58,"name":"Ларго","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/58.jpg"},{"id":59,"name":"Фабио","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/59.jpg"},{"id":60,"name":"Кастелла","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/60.jpg"},{"id":61,"name":"Каденза","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/61.jpg"},{"id":62,"name":"Авангард","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/62.jpg"},{"id":63,"name":"Тайм аут","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/63.jpg"},{"id":64,"name":"Бриндизи","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/64.jpg"},{"id":65,"name":"Мангошарм","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/65.jpg"},{"id":66,"name":"Трипл а","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/66.jpg"},{"id":67,"name":"Лаптоп","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/67.jpg"},{"id":68,"name":"Перпл принц","category":"Тюльпаны","description":"","price":50,"photoUrl":"./images/68.jpg"},{"id":70,"name":"Вайт принц","category":"Тюльпаны","description":"","price":90,"photoUrl":"./images/70.jpg"},{"id":71,"name":"Стронг голд","category":"Тюльпаны","description":"","price":50,"photoUrl":"./images/71.jpg"},{"id":72,"name":"Стронг лав","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/72.jpg"},{"id":73,"name":"Парадеро","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/73.jpg"},{"id":74,"name":"Кунг-фу","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/74.jpg"},{"id":75,"name":"Карри","category":"Тюльпаны","description":"","price":50,"photoUrl":"./images/75.jpg"},{"id":76,"name":"Фортресс","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/76.jpg"},{"id":77,"name":"Алиби","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/77.jpg"},{"id":78,"name":"Мемфис","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/78.jpg"},{"id":79,"name":"Камалия","category":"Тюльпаны","description":"","price":50,"photoUrl":"./images/79.jpg"},{"id":80,"name":"Авокадо","category":"Тюльпаны","description":"","price":60,"photoUrl":"./images/80.jpg"},{"id":81,"name":"Веранди","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/81.jpg"},{"id":82,"name":"Оранж романтика","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/82.jpg"},{"id":82,"name":"Тоффи","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/83.jpg"},{"id":84,"name":"Испания","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/84.jpg"},{"id":85,"name":"Травиата","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/85.jpg"},{"id":86,"name":"Дольчетто","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/86.jpg"},{"id":87,"name":"Пимс","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/87.jpg"},{"id":88,"name":"Хартс","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/88.jpg"},{"id":89,"name":"Шаде оф грей","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/89.jpg"},{"id":90,"name":"Афродита","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/90.jpg"},{"id":91,"name":"Джумилия","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/91.jpg"},{"id":92,"name":"Фрутетто","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/92.jpg"},{"id":93,"name":"Мандала","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/93.jpg"},{"id":94,"name":"Унфоргетабле","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/94.jpg"},{"id":95,"name":"Блек бакара","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/95.jpg"},{"id":96,"name":"Вестминское аббатсво","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/96.jpg"},{"id":97,"name":"Кампанелла","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/97.jpg"},{"id":98,"name":"Симпли джорджиус","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/98.jpg"},{"id":99,"name":"Эшли вайт","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/99.jpg"},{"id":100,"name":"Джалита","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/100.jpg"},{"id":101,"name":"Мадемуазелл мейян","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/101.jpg"},{"id":102,"name":"Ред майра","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/102.jpg"},{"id":103,"name":"Гуэренси","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/103.jpg"},{"id":104,"name":"Синг малт","category":"Чайно гибридные","description":"","price":600,"photoUrl":"./images/104.jpg"},{"id":105,"name":"Симбол","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/105.jpg"},{"id":106,"name":"Каоликазали","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/106.jpg"},{"id":107,"name":"Принцесса суки","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/107.jpg"},{"id":108,"name":"Сансет мемори","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/108.jpg"},{"id":109,"name":"Лулаби","category":"Чайно гибридные","description":"","price":450,"photoUrl":"./images/109.jpg"},{"id":110,"name":"Мон кер","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/110.jpg"},{"id":111,"name":"Каоликазали","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/111.jpg"},{"id":112,"name":"Голубой шторм","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/112.jpg"},{"id":113,"name":"Абдиель","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/113.jpg"},{"id":114,"name":"Вакана","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/114.jpg"},{"id":115,"name":"Дафна","category":"Чайно гибридные","description":"","price":500,"photoUrl":"./images/115.jpg"},{"id":116,"name":"Лавандовый букет","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/116.jpg"},{"id":117,"name":"Мияби ча","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/117.jpg"},{"id":118,"name":"Принцесса сакура","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/118.jpg"},{"id":119,"name":"Чача","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/119.jpg"},{"id":120,"name":"Франзуское платье","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/120.jpg"},{"id":121,"name":"Эвента диор","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/121.jpg"},{"id":122,"name":"Масора","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/122.jpg"},{"id":123,"name":"Урара","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/123.jpg"},{"id":124,"name":"Сола","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/124.jpg"},{"id":125,"name":"Шахеризада","category":"Японская селекция","description":"","price":600,"photoUrl":"./images/125.jpg"},{"id":126,"name":"Ариадна","category":"Японская селекция","description":"","price":600,"photoUrl":"./images/126.jpg"},{"id":127,"name":"Тилия","category":"Японская селекция","description":"","price":600,"photoUrl":"./images/127.jpg"},{"id":128,"name":"Корона","category":"Японская селекция","description":"","price":450,"photoUrl":"./images/128.jpg"},{"id":129,"name":"Кинда блю","category":"Японская селекция","description":"","price":600,"photoUrl":"./images/129.jpg"},{"id":130,"name":"Мулен де галет","category":"Японская селекция","description":"","price":600,"photoUrl":"./images/130.jpg"},{"id":131,"name":"Май бьюти","category":"Японская селекция","description":"","price":500,"photoUrl":"./images/131.jpg"},{"id":132,"name":"Аубе","category":"Японская селекция","description":"","price":550,"photoUrl":"./images/132.jpg"},{"id":133,"name":"Психея","category":"Японская селекция","description":"","price":550,"photoUrl":"./images/133.jpg"},{"id":134,"name":"Индиан раффлс","category":"Флорибунда","description":"","price":500,"photoUrl":"./images/134.jpg"},{"id":135,"name":"Колор оф юпитер","category":"Японская селекция","description":"","price":600,"photoUrl":"./images/135.jpg"},{"id":136,"name":"Марк шагал","category":"Флорибунда","description":"","price":450,"photoUrl":"./images/136.jpg"},{"id":137,"name":"Минерва","category":"Флорибунда","description":"","price":450,"photoUrl":"./images/137.jpg"},{"id":138,"name":"Герцогиня Кристина","category":"Флорибунда","description":"","price":450,"photoUrl":"./images/138.jpg"},{"id":139,"name":"лав сонг","category":"Флорибунда","description":"","price":450,"photoUrl":"./images/139.jpg"},{"id":140,"name":"Стефания баронин","category":"Флорибунда","description":"","price":500,"photoUrl":"./images/140.jpg"},{"id":141,"name":"Терра лимбургия","category":"Флорибунда","description":"","price":450,"photoUrl":"./images/141.jpg"},{"id":142,"name":"Омаж барбара","category":"Флорибунда","description":"","price":450,"photoUrl":"./images/142.jpg"},{"id":143,"name":"Тьерри марк","category":"Флорибунда","description":"","price":550,"photoUrl":"./images/143.jpg"},{"id":144,"name":"Ред леонардо","category":"Флорибунда","description":"","price":500,"photoUrl":"./images/144.jpg"},{"id":145,"name":"Мишель друкен","category":"Флорибунда","description":"","price":450,"photoUrl":"./images/145.jpg"},{"id":146,"name":"Мокароза","category":"Флорибунда","description":"","price":600,"photoUrl":"./images/146.jpg"},{"id":147,"name":"Фиеста баблс","category":"Спрей","description":"","price":450,"photoUrl":"./images/147.jpg"},{"id":148,"name":"Корал баблс","category":"Спрей","description":"","price":450,"photoUrl":"./images/148.jpg"},{"id":149,"name":"4 свадьбы","category":"Спрей","description":"","price":450,"photoUrl":"./images/149.jpg"},{"id":150,"name":"Белла линда круелла","category":"Спрей","description":"","price":450,"photoUrl":"./images/150.jpg"},{"id":151,"name":"Фаер флоу","category":"Спрей","description":"","price":450,"photoUrl":"./images/151.jpg"},{"id":152,"name":"Блоссом баблс","category":"Спрей","description":"","price":450,"photoUrl":"./images/152.jpg"},{"id":153,"name":"Федра","category":"Шраб","description":"","price":550,"photoUrl":"./images/153.jpg"},{"id":154,"name":"Перпл лодж","category":"Шраб","description":"","price":450,"photoUrl":"./images/154.jpg"},{"id":155,"name":"Королева Швеции","category":"Шраб","description":"","price":450,"photoUrl":"./images/155.jpg"},{"id":156,"name":"Зе веджвуд","category":"Шраб","description":"","price":450,"photoUrl":"./images/156.jpg"},{"id":157,"name":"Лавандовый букет","category":"Плетистые","description":"","price":500,"photoUrl":"./images/157.jpg"},{"id":158,"name":"Джанет","category":"Плетистые","description":"","price":500,"photoUrl":"./images/158.jpg"},{"id":159,"name":"Нахема","category":"Плетистые","description":"","price":500,"photoUrl":"./images/159.jpg"},{"id":160,"name":"Бьенвеню","category":"Плетистые","description":"","price":500,"photoUrl":"./images/160.jpg"},{"id":161,"name":"Флорентина","category":"Плетистые","description":"","price":500,"photoUrl":"./images/161.jpg"},{"id":162,"name":"Пьер цикламен","category":"Плетистые","description":"","price":500,"photoUrl":"./images/162.jpg"},{"id":163,"name":"Рейни Блю","category":"Плетистые","description":"","price":600,"photoUrl":"./images/163.jpg"},{"id":164,"name":"Квиксилвер","category":"Плетистые","description":"","price":600,"photoUrl":"./images/164.jpg"},{"id":165,"name":"Мусилак","category":"Плетистые","description":"","price":600,"photoUrl":"./images/165.jpg"},{"id":166,"name":"Ред Каскад","category":"Почвопокровные","description":"","price":500,"photoUrl":"./images/166.jpg"},{"id":167,"name":"Букет парфе","category":"Мускусные","description":"","price":450,"photoUrl":"./images/167.jpg"},{"id":168,"name":"Жанна дарк","category":"Крокусы","description":"","price":50,"photoUrl":"./images/168.jpg"},{"id":169,"name":"Смирнов","category":"Тюльпаны","description":"","price":80,"photoUrl":"./images/169.jpg"},{"id":170,"name":"Норкчеп","category":"Тюльпаны","description":"","price":70,"photoUrl":"./images/170.jpg"},{"id":171,"name":"Шираюке","category":"Клематис","description":"","price":800,"photoUrl":"./images/171.jpg"},{"id":172,"name":"Кардинал Вышинский","category":"Клематис","description":"","price":800,"photoUrl":"./images/172.jpg"},{"id":173,"name":"Кардинал руж","category":"Клематис","description":"","price":800,"photoUrl":"./images/173.jpg"},{"id":174,"name":"Раджа","category":"Клематис","description":"","price":800,"photoUrl":"./images/174.jpg"},{"id":175,"name":"Олсон","category":"Клематис","description":"","price":800,"photoUrl":"./images/175.jpg"},{"id":176,"name":"Вероника чойс","category":"Клематисы Махровые","description":"","price":1000,"photoUrl":"./images/176.jpg"},{"id":177,"name":"Мисс спенсер","category":"Клематис","description":"","price":800,"photoUrl":"./images/177.jpg"},{"id":178,"name":"Полиш Спирит","category":"Клематис","description":"","price":800,"photoUrl":"./images/178.jpg"},{"id":179,"name":"Пинк фентези","category":"Клематис","description":"","price":800,"photoUrl":"./images/179.jpg"},{"id":180,"name":"Асао","category":"Клематис","description":"","price":800,"photoUrl":"./images/180.jpg"},{"id":181,"name":"Мармори","category":"Клематис","description":"","price":800,"photoUrl":"./images/181.jpg"},{"id":182,"name":"Мари клер","category":"Клематис","description":"","price":800,"photoUrl":"./images/182.jpg"},{"id":183,"name":"Вестерплатте","category":"Клематис","description":"","price":800,"photoUrl":"./images/183.jpg"},{"id":184,"name":"Веноза","category":"Клематис","description":"","price":800,"photoUrl":"./images/184.jpg"},{"id":186,"name":"Силен","category":"Клематис","description":"","price":800,"photoUrl":"./images/186.jpg"},{"id":187,"name":"Лагуна","category":"Княжик","description":"","price":900,"photoUrl":"./images/187.jpg"},{"id":188,"name":"Радар любви","category":"Княжик","description":"","price":900,"photoUrl":"./images/188.jpg"},{"id":189,"name":"Хай","category":"Княжик","description":"","price":900,"photoUrl":"./images/189.jpg"},{"id":190,"name":"Пиилу","category":"Клематисы Махровые","description":"","price":1000,"photoUrl":"./images/190.jpg"},{"id":191,"name":"Мультиблю","category":"Клематисы Махровые","description":"","price":1000,"photoUrl":"./images/191.jpg"},{"id":192,"name":"Кайзер","category":"Клематисы Махровые","description":"","price":1000,"photoUrl":"./images/192.jpg"},{"id":193,"name":"Дюшес Эдинбург","category":"Клематисы Махровые","description":"","price":1000,"photoUrl":"./images/193.jpg"},{"id":194,"name":"Саммер лав","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/194.jpg"},{"id":195,"name":"Мохито","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/195.jpg"},{"id":196,"name":"Жемжкчина фестиваля","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/196.jpg"},{"id":197,"name":"Пинк промис","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/197.jpg"},{"id":198,"name":"Графити","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/198.jpg"},{"id":199,"name":"Краса лескова","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/199.jpg"},{"id":200,"name":"Лидия","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/200.jpg"},{"id":201,"name":"Петит черри можно в кашпо","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/201.jpg"},{"id":202,"name":"Коттон крем","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/202.jpg"},{"id":203,"name":"Харис сувенир","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/203.jpg"},{"id":204,"name":"Меджикал везувио","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/204.jpg"},{"id":205,"name":"Саммер сноу","category":"Гортензии метельчатые","description":"","price":400,"photoUrl":"./images/205.jpg"},{"id":206,"name":"Пикоти","category":"Клематис","description":"","price":800,"photoUrl":"./images/206.jpg"},{"id":207,"name":"Пурпур плена элеганс","category":"Клематис","description":"","price":1000,"photoUrl":"./images/207.jpg"},{"id":208,"name":"Дороти толвер","category":"Клематис","description":"","price":800,"photoUrl":"./images/208.jpg"},{"id":209,"name":"Букаву мускуная","category":"Мускусные","description":"","price":550,"photoUrl":"./images/209.jpg"},{"id":210,"name":"Букет парфюм","category":"Мускусные","description":"","price":550,"photoUrl":"./images/210.jpg"},{"id":211,"name":"Вальферданж","category":"Мускусные","description":"","price":550,"photoUrl":"./images/211.jpg"},{"id":212,"name":"Гирлянд амур","category":"Мускусные","description":"","price":550,"photoUrl":"./images/212.jpg"},{"id":213,"name":"Ватерлоо","category":"Мускусные","description":"","price":550,"photoUrl":"./images/213.jpg"},{"id":214,"name":"Гирлянд амур","category":"Мускусные","description":"","price":550,"photoUrl":"./images/214.jpg"},{"id":215,"name":"Джубили селебрейшн","category":"Мускусные","description":"","price":550,"photoUrl":"./images/215.jpg"},{"id":216,"name":"Жоэль шраб франция","category":"Шраб","description":"","price":550,"photoUrl":"./images/216.jpg"},{"id":217,"name":"Фальстаф англия","category":"Шраб","description":"","price":550,"photoUrl":"./images/217.jpg"},{"id":218,"name":"Джубили селебрейшн","category":"Шраб","description":"","price":550,"photoUrl":"./images/218.jpg"},{"id":219,"name":"Боскобель Англия","category":"Спрей","description":"","price":550,"photoUrl":"./images/219.jpg"},{"id":220,"name":"Сноу денс","category":"Спрей","description":"","price":550,"photoUrl":"./images/220.jpg"},{"id":221,"name":"Еллоу беби","category":"Спрей","description":"","price":550,"photoUrl":"./images/221.jpg"},{"id":223,"name":"Беби маскарад","category":"Спрей","description":"","price":550,"photoUrl":"./images/223.jpg"},{"id":224,"name":"Мейди","category":"Спрей","description":"","price":550,"photoUrl":"./images/224.jpg"},{"id":225,"name":"арроу фолиес","category":"Спрей","description":"","price":550,"photoUrl":"./images/225.jpg"},{"id":226,"name":"Лувиана","category":"Спрей","description":"","price":550,"photoUrl":"./images/226.jpg"},{"id":227,"name":"Грин айс","category":"Спрей","description":"","price":550,"photoUrl":"./images/227.jpg"},{"id":228,"name":"Леди парфюм Полиантовая","category":"Полиантовые","description":"","price":550,"photoUrl":"./images/228.jpg"},{"id":229,"name":"Морсдаг мини розы Полиантовые","category":"Полиантовые","description":"","price":550,"photoUrl":"./images/229.jpg"},{"id":230,"name":"Оранж морсдаг","category":"Полиантовые","description":"","price":550,"photoUrl":"./images/230.jpg"},{"id":231,"name":"Уайт морсдаг","category":"Полиантовые","description":"","price":550,"photoUrl":"./images/231.jpg"},{"id":232,"name":"Фенси бебилон айс","category":"Бебилон","description":"","price":550,"photoUrl":"./images/232.jpg"},{"id":233,"name":"Хеллоу","category":"Почвопокровная","description":"","price":233,"photoUrl":"./images/233.jpg"},{"id":234,"name":"Альба","category":"Почвопокровная","description":"","price":550,"photoUrl":"./images/234.jpg"},{"id":235,"name":"Ги свой","category":"Шраб","description":"","price":550,"photoUrl":"./images/235.jpg"},{"id":236,"name":"Анри де сидане франция","category":"Спрей","description":"","price":550,"photoUrl":"./images/236.jpg"},{"id":237,"name":"Бель де сегоз","category":"Франция","description":"","price":550,"photoUrl":"./images/237.jpg"},{"id":238,"name":"Веласкес","category":"Франция","description":"","price":550,"photoUrl":"./images/238.jpg"},{"id":239,"name":"Регенсберг","category":"Спрей","description":"","price":550,"photoUrl":"./images/239.jpg"},{"id":240,"name":"Арроу фолиес","category":"Спрей","description":"","price":550,"photoUrl":"./images/240.jpg"},{"id":241,"name":"Динки","category":"Мускусные","description":"","price":550,"photoUrl":"./images/241.jpg"},{"id":242,"name":"Хевенли пинк","category":"Мускусные","description":"","price":550,"photoUrl":"./images/242.jpg"},{"id":244,"name":"Вайт шифон","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/244.jpg"},{"id":245,"name":"Чайна шифон","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/245.jpg"},{"id":246,"name":"Старберст","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/246.jpg"},{"id":247,"name":"Специозус","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/247.jpg"},{"id":248,"name":"Валентина","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/248.jpg"},{"id":249,"name":"Лавандер шифон","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/249.jpg"},{"id":250,"name":"Пинк шифон","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/250.jpg"},{"id":251,"name":"Ван гог","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/251.jpg"},{"id":252,"name":"Кабаре пастель","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/252.jpg"},{"id":253,"name":"Дюк де брабант","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/253.jpg"},{"id":254,"name":"Блю шифон","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/254.jpg"},{"id":255,"name":"Манжета шифон","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/255.jpg"},{"id":256,"name":"Кабере ред","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/256.jpg"},{"id":257,"name":"Люси","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/257.jpg"},{"id":258,"name":"Арденс","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/258.jpg"},{"id":259,"name":"Адмирал девей","category":"Гибискус древовидный","description":"","price":450,"photoUrl":"./images/259.jpg"},{"id":260,"name":"Марианна фон вайцзек кер","category":"Рододендрон вечно зелёный","description":"","price":800,"photoUrl":"./images/260.jpg"},{"id":261,"name":"Мадам массон","category":"Рододендрон вечно зелёный","description":"","price":800,"photoUrl":"./images/261.jpg"},{"id":262,"name":"Азурро","category":"Рододендрон вечно зелёный","description":"","price":800,"photoUrl":"./images/262.jpg"},{"id":263,"name":"Нова зембла","category":"Рододендрон вечно зелёный","description":"","price":800,"photoUrl":"./images/263.jpg"},{"id":264,"name":"Пи джей","category":"Рододендрон вечно зелёный","description":"","price":800,"photoUrl":"./images/264.jpg"},{"id":265,"name":"Симпатия","category":"Плетистые","description":"","price":550,"photoUrl":"./images/265.jpg"},{"id":266,"name":"Вестерленд","category":"Плетистые","description":"","price":550,"photoUrl":"./images/266.jpg"},{"id":267,"name":"Казино","category":"Плетистые","description":"","price":550,"photoUrl":"./images/267.jpg"},{"id":268,"name":"Эрик таберли","category":"Плетистые","description":"","price":550,"photoUrl":"./images/268.jpg"},{"id":269,"name":"Барок","category":"Плетистые","description":"","price":550,"photoUrl":"./images/269.jpg"},{"id":270,"name":"Эбав олл","category":"Плетистые","description":"","price":550,"photoUrl":"./images/270.jpg"},{"id":271,"name":"Алибаба","category":"Плетистые","description":"","price":550,"photoUrl":"./images/271.jpg"},{"id":272,"name":"Пиппин","category":"Плетистые","description":"","price":550,"photoUrl":"./images/272.jpg"},{"id":273,"name":"Лавиния","category":"Плетистые","description":"","price":550,"photoUrl":"./images/273.jpg"},{"id":274,"name":"Диди бриджиотер","category":"Плетистые","description":"","price":550,"photoUrl":"./images/274.jpg"},{"id":275,"name":"Алоха","category":"Плетистые","description":"","price":550,"photoUrl":"./images/275.jpg"},{"id":276,"name":"Блю мун","category":"Плетистые","description":"","price":550,"photoUrl":"./images/276.jpg"},{"id":277,"name":"Пич мельба","category":"Плетистые","description":"","price":550,"photoUrl":"./images/277.jpg"},{"id":278,"name":"Силуэтта","category":"Плетистые","description":"","price":550,"photoUrl":"./images/278.jpg"},{"id":279,"name":"Аляска","category":"Плетистые","description":"","price":550,"photoUrl":"./images/279.jpg"},{"id":280,"name":"Плетистая вельвет стар","category":"Плетистые","description":"","price":550,"photoUrl":"./images/280.jpg"},{"id":281,"name":"Салма эс се","category":"Плетистые","description":"","price":550,"photoUrl":"./images/281.jpg"},{"id":282,"name":"Антик","category":"Плетистые","description":"","price":550,"photoUrl":"./images/282.jpg"},{"id":283,"name":"Трезор","category":"Лилии","description":"","price":200,"photoUrl":"./images/283.jpg"},{"id":284,"name":"Дукати","category":"Лилии","description":"","price":200,"photoUrl":"./images/284.jpg"},{"id":285,"name":"Арбатакс","category":"Лилии","description":"","price":200,"photoUrl":"./images/285.jpg"},{"id":286,"name":"Калабрия","category":"Лилии","description":"","price":200,"photoUrl":"./images/286.jpg"},{"id":287,"name":"Албу фейра","category":"Лилии","description":"","price":200,"photoUrl":"./images/287.jpg"},{"id":288,"name":"Винстли","category":"Лилии","description":"","price":300,"photoUrl":"./images/288.jpg"},{"id":289,"name":"Батерфляй вингс","category":"Лилии","description":"","price":250,"photoUrl":"./images/289.jpg"},{"id":290,"name":"Жозефина","category":"Лилии","description":"","price":300,"photoUrl":"./images/290.jpg"},{"id":291,"name":"Фореве лаура","category":"Лилии","description":"","price":300,"photoUrl":"./images/291.jpg"},{"id":292,"name":"Фореве сьюзан","category":"Лилии","description":"","price":300,"photoUrl":"./images/292.jpg"},{"id":293,"name":"Джоя Пуро","category":"Лилии","description":"","price":200,"photoUrl":"./images/293.jpg"},{"id":294,"name":"Тропикал дракон","category":"Лилии","description":"","price":350,"photoUrl":"./images/294.jpg"},{"id":295,"name":"Требиано","category":"Лилии","description":"","price":200,"photoUrl":"./images/295.jpg"},{"id":296,"name":"Тини массив","category":"Лилии","description":"","price":200,"photoUrl":"./images/296.jpg"},{"id":297,"name":"Тини лион","category":"Лилии","description":"","price":200,"photoUrl":"./images/297.jpg"},{"id":298,"name":"Тини инк","category":"Лилии","description":"","price":200,"photoUrl":"./images/298.jpg"},{"id":299,"name":"Муст си","category":"Лилии","description":"","price":350,"photoUrl":"./images/299.jpg"},{"id":300,"name":"Мускадет","category":"Лилии","description":"","price":350,"photoUrl":"./images/300.jpg"},{"id":301,"name":"Флавия (лил дерево)","category":"Лилии","description":"","price":300,"photoUrl":"./images/301.jpg"},{"id":302,"name":"Блек шарм","category":"Лилии","description":"","price":300,"photoUrl":"./images/302.jpg"},{"id":303,"name":"Далиан Отгрибрид (лил дерево)","category":"Лилии","description":"","price":350,"photoUrl":"./images/303.jpg"},{"id":304,"name":"Пуро паз","category":"Лилии","description":"","price":200,"photoUrl":"./images/304.jpg"},{"id":305,"name":"Свит шугар","category":"Лилии","description":"","price":250,"photoUrl":"./images/305.jpg"},{"id":306,"name":"Манушка","category":"Лилии","description":"","price":350,"photoUrl":"./images/306.jpg"},{"id":307,"name":"Зита","category":"Лилии","description":"","price":350,"photoUrl":"./images/307.jpg"},{"id":308,"name":"Гизелла","category":"Лилии","description":"","price":350,"photoUrl":"./images/308.jpg"},{"id":309,"name":"Риана","category":"Лилии","description":"","price":350,"photoUrl":"./images/309.jpg"},{"id":310,"name":"Хачи","category":"Лилии","description":"","price":300,"photoUrl":"./images/310.jpg"},{"id":311,"name":"Тинторетто","category":"Лилии","description":"","price":250,"photoUrl":"./images/311.jpg"},{"id":312,"name":"Ланцифолиум","category":"Лилии","description":"","price":400,"photoUrl":"./images/312.jpg"},{"id":313,"name":"Ред вельвет","category":"Лилии","description":"","price":400,"photoUrl":"./images/313.jpg"},{"id":314,"name":"Елоу брюс","category":"Лилии","description":"","price":400,"photoUrl":"./images/314.jpg"},{"id":315,"name":"Свит сарендер","category":"Лилии","description":"","price":400,"photoUrl":"./images/315.jpg"},{"id":316,"name":"Тайгер беби","category":"Лилии","description":"","price":400,"photoUrl":"./images/316.jpg"},{"id":317,"name":"Голден монинг","category":"Мартагоны","description":"","price":450,"photoUrl":"./images/317.jpg"},{"id":318,"name":"Мартагон терра сити","category":"Мартагоны","description":"","price":450,"photoUrl":"./images/318.jpg"},{"id":319,"name":"Арабия найт","category":"Мартагоны","description":"","price":450,"photoUrl":"./images/319.jpg"},{"id":320,"name":"Манитоба","category":"Мартагоны","description":"","price":450,"photoUrl":"./images/320.jpg"},{"id":321,"name":"Пурпл монинг","category":"Мартагоны","description":"","price":450,"photoUrl":"./images/321.jpg"},{"id":322,"name":"Альберта монинг","category":"Мартагоны","description":"","price":450,"photoUrl":"./images/322.jpg"},{"id":323,"name":"Чудо вишня","category":"Гибрид","description":"гибрид черешни и вишни крупная10гр сладкая почти без кислинки. 4м.ранняя","price":600,"photoUrl":"./images/323.jpg"},{"id":324,"name":"Шоколадница","category":"Вишня","description":"самоплодная 2,5 м вторая половина июля, 3-4 гр вес 1 ягоды","price":600,"photoUrl":"./images/324.jpg"},{"id":325,"name":"Призвание","category":"Вишня","description":"2,5м кисло сладкая ягода 5-6 гр, середина июля.","price":600,"photoUrl":"./images/325.jpg"},{"id":326,"name":"Вильямс","category":"Груша","description":"конец августа 150-200гр ,4м","price":600,"photoUrl":"./images/326.jpg"},{"id":327,"name":"Дюк Добрыня","category":"Гибрид","description":"черешня с вишней гибрид\nвысота1,6-1,8 . самоплодный\n 7-8 гр.","price":600,"photoUrl":"./images/327.jpg"},{"id":328,"name":"Биг топ","category":"Нектарин","description":"высота2-4 м, самоплодный , 200гр конец июля начало августа","price":600,"photoUrl":"./images/328.jpg"},{"id":329,"name":"Свит леди","category":"Нектарин","description":"200-300 гр, самоплодный август 3-4 м","price":600,"photoUrl":"./images/329.jpg"},{"id":330,"name":"Роял ли","category":"Персик","description":"поздний самоплодный высота 3 м. 200-300гр","price":600,"photoUrl":"./images/330.jpg"},{"id":331,"name":"Спринг леди","category":"Персик","description":"самоплодный ранний 150гр от 2,5 до 3,5м","price":600,"photoUrl":"./images/331.jpg"},{"id":332,"name":"Эрли Квин","category":"Слива","description":"50-80 гр диплоидная 2 половина июля","price":600,"photoUrl":"./images/332.jpg"},{"id":333,"name":"Свит хард","category":"Черешня","description":"самоплодная 9-12гр 3-4м плодоносит конец июля","price":600,"photoUrl":"./images/333.jpg"},{"id":334,"name":"Ипуть","category":"Черешня","description":"ранний 5-8 грамм нужен опылитель(ревна) сочная ягода 4м","price":600,"photoUrl":"./images/334.jpg"},{"id":335,"name":"Ревна","category":"Черешня","description":"5-8 гр плодоношение июль 4м .","price":600,"photoUrl":"./images/335.jpg"},{"id":336,"name":"Шарафуга Вельвет Санрайз","category":"Гибрид","description":"гибрид сливы персик и абрикос высота 100-150гр 2,5-3, 5 м высота. косточка легко отделяется.","price":600,"photoUrl":"./images/336.jpg"},{"id":337,"name":"Конфетная","category":"Яблоня","description":"высота 4 м ранняя сладкая. Частично опыл.","price":600,"photoUrl":"./images/337.jpg"},{"id":338,"name":"Квин мери","category":"Колонная черешня","description":"2м самоплодная 10-13 гр","price":600,"photoUrl":"./images/338.jpg"},{"id":339,"name":"Арбат","category":"Колонная яблоня","description":"1,5 -2м . 100гр.част самоплодная","price":600,"photoUrl":"./images/339.jpg"},{"id":340,"name":"Нью Джерси","category":"Абрикос","description":"ранний, самоплодный, высота 4м, 70-90гр 1плод","price":600,"photoUrl":"./images/340.jpg"},{"id":341,"name":"Шалах","category":"Абрикос","description":"сладкий 3-4м среднеранний, частично самоплодный.","price":600,"photoUrl":"./images/341.jpg"},{"id":342,"name":"Белый лебедь","category":"Персик","description":"","price":700,"photoUrl":"./images/342.jpg"},{"id":343,"name":"Гигант ред","category":"Черешня","description":"","price":700,"photoUrl":"./images/343.jpg"},{"id":344,"name":"Черный принц","category":"Абрикос","description":"","price":700,"photoUrl":"./images/344.jpg"},{"id":345,"name":"Карлик тамарис","category":"Вишня","description":"","price":700,"photoUrl":"./images/345.jpg"},{"id":346,"name":"Посол мира","category":"Персик","description":"","price":700,"photoUrl":"./images/346.jpg"},{"id":347,"name":"Белла рояль","category":"Шарафуга","description":"","price":700,"photoUrl":"./images/347.jpg"},{"id":348,"name":"Белла голд","category":"Шарафуга","description":"","price":700,"photoUrl":"./images/348.jpg"},{"id":349,"name":"Свит Трит","category":"Гибрид","description":"","price":1200,"photoUrl":"./images/349.jpg"},{"id":350,"name":"Флауэр Суприм","category":"Гибрид","description":"","price":1200,"photoUrl":"./images/350.jpg"},{"id":351,"name":"Дапл Данди","category":"Гибрид","description":"","price":1200,"photoUrl":"./images/351.jpg"},{"id":352,"name":"Флауэр финал","category":"Гибрид","description":"","price":1200,"photoUrl":"./images/352.jpg"},{"id":353,"name":"Бета","category":"Гибрид","description":"","price":1200,"photoUrl":"./images/353.jpg"},{"id":354,"name":"Шинсейки","category":"Груша","description":"","price":1500,"photoUrl":"./images/354.jpg"},{"id":355,"name":"Сердце дракона","category":"Яблоня","description":"","price":1700,"photoUrl":"./images/355.jpg"},{"id":356,"name":"Номер 3","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/356.jpg"},{"id":357,"name":"Номер 38","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/357.jpg"},{"id":358,"name":"Номер 15","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/358.jpg"},{"id":359,"name":"Номер 1","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/359.jpg"},{"id":360,"name":"Номер 13","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/360.jpg"},{"id":361,"name":"Номер 22","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/361.jpg"},{"id":362,"name":"Номер 5","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/362.jpg"},{"id":363,"name":"Номер 10","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/363.jpg"},{"id":364,"name":"Номер 31","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/364.jpg"},{"id":365,"name":"Номер 32","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/365.jpg"},{"id":366,"name":"Номер 28","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/366.jpg"},{"id":367,"name":"Номер 23","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/367.jpg"},{"id":368,"name":"Номер 34","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/368.jpg"},{"id":369,"name":"Номер 18","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/369.jpg"},{"id":370,"name":"Номер 14","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/370.jpg"},{"id":371,"name":"Номер 20","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/371.jpg"},{"id":372,"name":"Номер 17","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/372.jpg"},{"id":373,"name":"Номер 9","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/373.jpg"},{"id":374,"name":"Номер 8","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/374.jpg"},{"id":375,"name":"Номер 4","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/375.jpg"},{"id":376,"name":"Номер 30","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/376.jpg"},{"id":377,"name":"Номер 35","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/377.jpg"},{"id":378,"name":"Номер 29","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/378.jpg"},{"id":379,"name":"Номер 7","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/379.jpg"},{"id":380,"name":"Номер 2","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/380.jpg"},{"id":381,"name":"Номер 33","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/381.jpg"},{"id":382,"name":"Номер 11","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/382.jpg"},{"id":383,"name":"Номер 26","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/383.jpg"},{"id":384,"name":"Номер 16","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/384.jpg"},{"id":385,"name":"Номер 24","category":"Георгины карликовые","description":"","price":400,"photoUrl":"./images/385.jpg"},{"id":386,"name":"Номер 4","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/386.jpg"},{"id":387,"name":"Номер 6","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/387.jpg"},{"id":388,"name":"Номер 15","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/388.jpg"},{"id":389,"name":"Номер 14","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/389.jpg"},{"id":390,"name":"Номер 3","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/390.jpg"},{"id":391,"name":"Номер 9","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/391.jpg"},{"id":392,"name":"Номер 1","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/392.jpg"},{"id":393,"name":"Номер 21","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/393.jpg"},{"id":394,"name":"Номер 11","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/394.jpg"},{"id":395,"name":"Номер 2","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/395.jpg"},{"id":396,"name":"Фио","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/396.jpg"},{"id":397,"name":"Номер 25","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/397.jpg"},{"id":398,"name":"Номер 17","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/398.jpg"},{"id":399,"name":"Номер 101","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/399.jpg"},{"id":400,"name":"Номер 13","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/400.jpg"},{"id":401,"name":"Номер 10","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/401.jpg"},{"id":402,"name":"Номер 23","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/402.jpg"},{"id":403,"name":"Номер 18","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/403.jpg"},{"id":404,"name":"Номер 12","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/404.jpg"},{"id":405,"name":"Номер 19","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/405.jpg"},{"id":406,"name":"Номер 24","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/406.jpg"},{"id":407,"name":"Номер 16","category":"Гвоздика многолетняя","description":"","price":400,"photoUrl":"./images/407.jpg"}];
+    function loadCatalog() {
+      allProducts = OFFLINE_CATALOG;
+      renderChips(allProducts);
+      renderCards(allProducts);
+      applyFilters();
+      document.getElementById('search').addEventListener('input', applyFilters);
+    }
+    loadCatalog();
+  </script>
+
+  <script>
+    // Service worker works only on HTTPS (or localhost), as required by browsers.
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Не удалось включить офлайн-режим:', err));
+      });
+    }
+  </script>
+
+</body>
+</html>
